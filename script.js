@@ -2,15 +2,22 @@ const sounds = ["applause", "boo", "gasp", "tada", "victory", "wrong"];
 let btncontainer = document.getElementById("buttons");
 let currentAudio = null;
 
-
+// Create sound buttons + <audio> elements
 sounds.forEach(sound => {
   const btn = document.createElement("button");
   btn.classList.add("btn");
   btn.innerText = sound;
 
+  // Create hidden <audio> element for Cypress test
+  const audio = document.createElement("audio");
+  audio.src = `sounds/${sound}.mp3`;
+  audio.setAttribute("preload", "auto");
+  audio.style.display = "none"; // invisible but in DOM
+  btncontainer.appendChild(audio);
+
   btn.addEventListener("click", () => {
-    stopSounds(); // stop any playing sound
-    const audio = new Audio(`sounds/${sound}.mp3`);
+    stopSounds();
+    audio.currentTime = 0;
     audio.play();
     currentAudio = audio;
   });
@@ -21,8 +28,6 @@ sounds.forEach(sound => {
 // Create Stop button separately
 const stopBtn = document.createElement("button");
 stopBtn.classList.add("stop");
-
-
 stopBtn.innerText = "Stop";
 
 stopBtn.addEventListener("click", () => {
@@ -31,8 +36,6 @@ stopBtn.addEventListener("click", () => {
     currentAudio.currentTime = 0;
   }
 });
-
-
 
 btncontainer.appendChild(stopBtn);
 
